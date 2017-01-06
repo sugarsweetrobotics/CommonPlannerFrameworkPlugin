@@ -18,6 +18,8 @@
 // <rtc-template block="service_impl_h">
 #include "TrajectryPlannerSVC_impl.h"
 
+
+class CommonPlannerFrameworkPlugin;
 // </rtc-template>
 
 // Service Consumer stub headers
@@ -278,7 +280,14 @@ class PlannerRTC_Cnoid
   // <rtc-template block="private_operation">
   
   // </rtc-template>
+private:
 
+  CommonPlannerFrameworkPlugin* m_pPlugin;
+
+public:
+  void setPlugin(CommonPlannerFrameworkPlugin* p) { m_pPlugin = p; }
+
+  CommonPlannerFrameworkPlugin* getPlugin() { return m_pPlugin; }
 };
 
 

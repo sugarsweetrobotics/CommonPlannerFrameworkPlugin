@@ -17,7 +17,6 @@ endif()
 
 set(idls idl/TrajectryPlanner.idl)
 
-
 macro(_IDL_OUTPUTS _idl _dir _result)
     set(${_result} ${_dir}/${_idl}SK.cc ${_dir}/${_idl}.hh
         ${_dir}/${_idl}DynSK.cc)
@@ -72,8 +71,6 @@ macro(OPENRTM_COMPILE_IDL_FILES)
     endforeach(idl)
 endmacro(OPENRTM_COMPILE_IDL_FILES)
 
-
-
 set(IDL_INCLUDE_DIRS
   ${OPENRTM_PREFIX}/include/openrtm-1.1
   ${OPENRTM_PREFIX}/include/coil-1.1
@@ -83,19 +80,6 @@ set(IDL_INCLUDE_DIRS
 idl_compile_cpp(idl_cpp_files idl_h_files idl TrajectryPlanner)
 include_directories(${IDL_INCLUDE_DIRS})
 
-if(0)
-set(library CnoidCommonPlannerFramework)
-
-set(library_sources )
-
-add_cnoid_library(${library} STATIC 
-  ${library_sources})
-#  ${OpenHRP_idl_cpp_files} ${OpenHRP_idl_h_files})
-
-target_link_libraries(${library} CnoidCorba)
-apply_common_setting_for_library(${library} "")
-endif(0)
-
 
 # Plugin
 set(plugin CnoidCommonPlannerFrameworkPlugin)
@@ -103,10 +87,13 @@ set(plugin CnoidCommonPlannerFrameworkPlugin)
 set(plugin_sources
   CommonPlannerFrameworkPlugin.cpp
   PlannerRTC_Cnoid.cpp
+  TrajectryPlannerSVC_impl.cpp
   ${idl_cpp_files})
 
 set(plugin_headers
+  CommonPlannerFrameworkPlugin.h
   PlannerRTC_Cnoid.h
+  TrajectryPlannerSVC_impl.h
   ${idl_h_files})
 
 if(OPENRTM_VERSION STREQUAL "1.1.0")

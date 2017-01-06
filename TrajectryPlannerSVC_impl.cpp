@@ -5,7 +5,9 @@
  *
  */
 
+#include "PlannerRTC_Cnoid.h"
 #include "TrajectryPlannerSVC_impl.h"
+#include "CommonPlannerFrameworkPlugin.h"
 
 /*
  * Example implementational code for IDL interface Manipulation::ObjectDetectionService
@@ -99,7 +101,11 @@ Manipulation_CollisionDetectionServiceSVC_impl::~Manipulation_CollisionDetection
 #ifndef WIN32
   #warning "Code missing in function <::CORBA::Boolean Manipulation_CollisionDetectionServiceSVC_impl::isCollide(const Manipulation::RobotIdentifier& manipInfo, const Manipulation::RobotJointInfo& jointSeq, Manipulation::CollisionInfo_out collision)>"
 #endif
-  return 0;
+
+  return m_pRTC->getPlugin()->isCollide();
+
+  
+  //return 0;
 }
 
 

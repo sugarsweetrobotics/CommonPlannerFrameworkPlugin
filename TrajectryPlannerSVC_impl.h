@@ -13,7 +13,10 @@
 
 #ifndef TRAJECTRYPLANNERSVC_IMPL_H
 #define TRAJECTRYPLANNERSVC_IMPL_H
- 
+
+
+class PlannerRTC_Cnoid;
+
 /*!
  * @class ObjectDetectionServiceSVC_impl
  * Example class implementing IDL interface Manipulation::ObjectDetectionService
@@ -43,6 +46,7 @@ class Manipulation_ObjectDetectionServiceSVC_impl
 
 };
 
+
 /*!
  * @class CurrentStateServiceSVC_impl
  * Example class implementing IDL interface Manipulation::CurrentStateService
@@ -55,6 +59,7 @@ class Manipulation_CurrentStateServiceSVC_impl
    // Make sure all instances are built on the heap by making the
    // destructor non-public
    //virtual ~CurrentStateServiceSVC_impl();
+
 
  public:
   /*!
@@ -84,6 +89,10 @@ class Manipulation_CollisionDetectionServiceSVC_impl
    // destructor non-public
    //virtual ~CollisionDetectionServiceSVC_impl();
 
+  PlannerRTC_Cnoid* m_pRTC;
+
+public:
+  void setRTC(PlannerRTC_Cnoid* pRTC) { m_pRTC = pRTC; }
  public:
   /*!
    * @brief standard constructor

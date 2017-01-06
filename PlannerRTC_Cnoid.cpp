@@ -74,6 +74,8 @@ RTC::ReturnCode_t PlannerRTC_Cnoid::onInitialize()
   
   // Set CORBA Service Ports
   addPort(m_collisionDetectorPort);
+
+  m_collisionDetectionService.setRTC(this);
   
   // </rtc-template>
 
