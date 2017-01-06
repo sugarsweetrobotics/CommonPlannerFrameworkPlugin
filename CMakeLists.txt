@@ -15,43 +15,43 @@ else()
   endif()
 endif()
 
+
+
+
+
+
+
+
+set(IDL_INCLUDE_DIRS
+  ${OPENRTM_PREFIX}/include/openrtm-1.1/rtm/idl
+  ${OPENRTM_PREFIX}/rtm/idl
+  idl )
+idl_compile_cpp(idl_cpp_files idl_h_files idl TrajectryPlanner)
+include_directories(${IDL_INCLUDE_DIRS})
+
 if(0)
 set(library CnoidCommonPlannerFramework)
 
-set(IDL_INCLUDE_DIRS 
-  ${OPENRTM_PREFIX}/include/openrtm-1.1/rtm/idl
-  ${OPENRTM_PREFIX}/rtm/idl # for the Windows installer version
-  ${CMAKE_CURRENT_SOURCE_DIR}/rtm/idl
-  )
-
-# idl_compile_cpp(idl_cpp_files idl_h_files corba CameraImage PointCloud)
-
-set(library_sources
-  )
-
-include_directories(${IDL_INCLUDE_DIRS})
+set(library_sources )
 
 add_cnoid_library(${library} STATIC 
-  ${library_sources}
-  )
-#  ${idl_cpp_files}
-#  ${idl_h_files}
+  ${library_sources})
 #  ${OpenHRP_idl_cpp_files} ${OpenHRP_idl_h_files})
 
 target_link_libraries(${library} CnoidCorba)
 apply_common_setting_for_library(${library} "")
+endif(0)
 
-endif()
 
 # Plugin
 set(plugin CnoidCommonPlannerFrameworkPlugin)
 
 set(plugin_sources
   CommonPlannerFrameworkPlugin.cpp
-  )
+  ${idl_cpp_files})
 
 set(plugin_headers
-  )
+  ${idl_h_files})
 
 if(OPENRTM_VERSION STREQUAL "1.1.0")
   add_cnoid_plugin(${plugin} SHARED ${plugin_sources} ${plugin_headers} ${mofiles})
