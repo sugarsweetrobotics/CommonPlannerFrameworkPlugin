@@ -16,7 +16,7 @@
 
 // Service implementation headers
 // <rtc-template block="service_impl_h">
-#include "TrajectryPlannerSVC_impl.h"
+#include "TrajectoryPlannerSVC_impl.h"
 
 
 class CommonPlannerFrameworkPlugin;

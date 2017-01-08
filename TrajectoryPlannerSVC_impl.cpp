@@ -1,12 +1,12 @@
 // -*-C++-*-
 /*!
- * @file  TrajectryPlannerSVC_impl.cpp
- * @brief Service implementation code of TrajectryPlanner.idl
+ * @file  TrajectoryPlannerSVC_impl.cpp
+ * @brief Service implementation code of TrajectoryPlanner.idl
  *
  */
 
 #include "PlannerRTC_Cnoid.h"
-#include "TrajectryPlannerSVC_impl.h"
+#include "TrajectoryPlannerSVC_impl.h"
 #include "CommonPlannerFrameworkPlugin.h"
 
 /*

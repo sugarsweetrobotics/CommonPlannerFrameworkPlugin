@@ -1,7 +1,7 @@
 // -*-C++-*-
 /*!
- * @file  TrajectryPlannerSVC_impl.h
- * @brief Service implementation header of TrajectryPlanner.idl
+ * @file  TrajectoryPlannerSVC_impl.h
+ * @brief Service implementation header of TrajectoryPlanner.idl
  *
  */
 
@@ -9,7 +9,7 @@
 #include "ExtendedDataTypesSkel.h"
 #include "InterfaceDataTypesSkel.h"
 
-#include "TrajectryPlannerSkel.h"
+#include "TrajectoryPlannerSkel.h"
 
 #ifndef TRAJECTRYPLANNERSVC_IMPL_H
 #define TRAJECTRYPLANNERSVC_IMPL_H

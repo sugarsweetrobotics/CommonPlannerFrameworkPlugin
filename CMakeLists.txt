@@ -15,7 +15,7 @@ else()
   endif()
 endif()
 
-set(idls idl/TrajectryPlanner.idl)
+set(idls idl/TrajectoryPlanner.idl)
 
 macro(_IDL_OUTPUTS _idl _dir _result)
     set(${_result} ${_dir}/${_idl}SK.cc ${_dir}/${_idl}.hh
@@ -77,7 +77,7 @@ set(IDL_INCLUDE_DIRS
   ${OPENRTM_PREFIX}/include/openrtm-1.1/rtm/idl
   ${OPENRTM_PREFIX}/rtm/idl
   idl )
-idl_compile_cpp(idl_cpp_files idl_h_files idl TrajectryPlanner)
+idl_compile_cpp(idl_cpp_files idl_h_files idl TrajectoryPlanner)
 include_directories(${IDL_INCLUDE_DIRS})
 
 
@@ -87,13 +87,13 @@ set(plugin CnoidCommonPlannerFrameworkPlugin)
 set(plugin_sources
   CommonPlannerFrameworkPlugin.cpp
   PlannerRTC_Cnoid.cpp
-  TrajectryPlannerSVC_impl.cpp
+  TrajectoryPlannerSVC_impl.cpp
   ${idl_cpp_files})
 
 set(plugin_headers
   CommonPlannerFrameworkPlugin.h
   PlannerRTC_Cnoid.h
-  TrajectryPlannerSVC_impl.h
+  TrajectoryPlannerSVC_impl.h
   ${idl_h_files})
 
 if(OPENRTM_VERSION STREQUAL "1.1.0")
