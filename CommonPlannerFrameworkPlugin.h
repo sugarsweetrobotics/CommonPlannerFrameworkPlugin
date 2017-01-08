@@ -26,6 +26,32 @@ Return_t(RETVAL returnValue_, const std::string& message_): returnValue(returnVa
   RETVAL returnValue;
   std::string message;
 };
+
+struct CnoidJointInfo {
+public:
+  CnoidJointInfo() {}
+  CnoidJointInfo(const CnoidJointInfo& info) {copyFrom(info);}
+  void operator=(const CnoidJointInfo& info) {copyFrom(info);}
+private:
+  void copyFrom(const CnoidJointInfo& info) {}
+
+public:
+  std::string name;
+  double jointAngle;
+  double jointDistance;
+  double linkLength;
+  double linkTwist;
+  double maxAngle;
+  double minAngle;
+};
+
+
+struct CnoidModelInfo {
+public:
+  std::vector<CnoidJointInfo> joints;
+};
+
+
 /**
  * Plugin Class
  */
@@ -57,6 +83,8 @@ public:
   void collisionCallback(const cnoid::CollisionPair& pair);
   
   Return_t isCollide(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);
+
+  Return_t getModelInfo(const std::string& name, CnoidModelInfo& modelInfo);
 };
 
 

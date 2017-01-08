@@ -157,16 +157,33 @@ Manipulation_ModelServerServiceSVC_impl::~Manipulation_ModelServerServiceSVC_imp
   // Please add extra destructor code here.
 }
 
-
+static void operator<<=(Manipulation::JointInfo& jointInfo, const CnoidJointInfo& info) {
+  jointInfo.name = CORBA::string_dup(info.name.c_str());
+  jointInfo.jointAngle = info.jointAngle;
+  jointInfo.jointDistance = info.jointDistance;
+  jointInfo.linkLength = info.linkLength;
+  jointInfo.linkTwist = info.linkTwist;
+  jointInfo.maxAngle = info.maxAngle;
+  jointInfo.minAngle = info.minAngle;
+};
 /*
  * Methods corresponding to IDL attributes and operations
  */
 void Manipulation_ModelServerServiceSVC_impl::getModelInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::RobotJointInfo_out robotInfo)
 {
-  // Please insert your code here and remove the following warning pragma
-#ifndef WIN32
-  #warning "Code missing in function <void Manipulation_ModelServerServiceSVC_impl::getModelInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::RobotJointInfo_out robotInfo)>"
-#endif
+  std::string name = (const char*)robotID.name;
+  CnoidModelInfo modelInfo;
+  Return_t retval = m_pRTC->getPlugin()->getModelInfo(name, modelInfo);
+
+
+  Manipulation::RobotJointInfo_var var(new Manipulation::RobotJointInfo());
+  int n = modelInfo.joints.size();
+  var->jointInfoSeq.length(n);
+  for(int i = 0;i < n;++i) {
+    var->jointInfoSeq[i] <<= modelInfo.joints[i];
+  }
+  robotInfo = var._retn();
+  return;
 }
 
 void Manipulation_ModelServerServiceSVC_impl::getMeshInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::MeshInfo_out mesh)

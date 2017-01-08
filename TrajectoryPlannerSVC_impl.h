@@ -148,6 +148,10 @@ class Manipulation_ModelServerServiceSVC_impl
    // Make sure all instances are built on the heap by making the
    // destructor non-public
    //virtual ~ModelServerServiceSVC_impl();
+  PlannerRTC_Cnoid* m_pRTC;
+
+public:
+  void setRTC(PlannerRTC_Cnoid* pRTC) { m_pRTC = pRTC; }
 
  public:
   /*!

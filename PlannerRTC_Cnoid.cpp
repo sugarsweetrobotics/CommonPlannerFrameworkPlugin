@@ -44,7 +44,8 @@ static const char* plannerrtc_cnoid_spec[] =
 PlannerRTC_Cnoid::PlannerRTC_Cnoid(RTC::Manager* manager)
     // <rtc-template block="initializer">
   : RTC::DataFlowComponentBase(manager),
-    m_collisionDetectorPort("collisionDetector")
+    m_collisionDetectorPort("collisionDetector"),
+    m_modelServerPort("modelServer")
 
     // </rtc-template>
 {
@@ -69,13 +70,16 @@ RTC::ReturnCode_t PlannerRTC_Cnoid::onInitialize()
   
   // Set service provider to Ports
   m_collisionDetectorPort.registerProvider("Manipulation_CollisionDetectionService", "Manipulation::CollisionDetectionService", m_collisionDetectionService);
+  m_modelServerPort.registerProvider("Manipulation_ModelServerService", "Manipulation::ModelServerService", m_modelServerService);
   
   // Set service consumers to Ports
   
   // Set CORBA Service Ports
   addPort(m_collisionDetectorPort);
+  addPort(m_modelServerPort);
 
   m_collisionDetectionService.setRTC(this);
+  m_modelServerService.setRTC(this);
   
   // </rtc-template>
 

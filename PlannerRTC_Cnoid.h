@@ -256,6 +256,7 @@ class PlannerRTC_Cnoid
   /*!
    */
   RTC::CorbaPort m_collisionDetectorPort;
+  RTC::CorbaPort m_modelServerPort;  
   
   // </rtc-template>
 
@@ -264,6 +265,13 @@ class PlannerRTC_Cnoid
   /*!
    */
   Manipulation_CollisionDetectionServiceSVC_impl m_collisionDetectionService;
+
+    // Service declaration
+  // <rtc-template block="service_declare">
+  /*!
+   */
+  Manipulation_ModelServerServiceSVC_impl m_modelServerService;
+
   
   // </rtc-template>
 
