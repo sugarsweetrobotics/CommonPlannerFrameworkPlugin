@@ -18,7 +18,7 @@ static const char* plannerrtc_cnoid_spec[] =
     "description",       "PlannerRTC Service on Choreonoid",
     "version",           "1.0.0",
     "vendor",            "Ogata Laboratory",
-    "category",          "MotionPlannin",
+    "category",          "MotionPlanning",
     "activity_type",     "PERIODIC",
     "kind",              "DataFlowComponent",
     "max_instance",      "1",
