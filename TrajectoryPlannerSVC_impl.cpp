@@ -192,6 +192,8 @@ void Manipulation_ModelServerServiceSVC_impl::getMeshInfo(const Manipulation::Ro
 #ifndef WIN32
   #warning "Code missing in function <void Manipulation_ModelServerServiceSVC_impl::getMeshInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::MeshInfo_out mesh)>"
 #endif
+
+  std::cout << "[ModelServerService] getMeshInfo is not implemented." << std::endl;
 }
 
 

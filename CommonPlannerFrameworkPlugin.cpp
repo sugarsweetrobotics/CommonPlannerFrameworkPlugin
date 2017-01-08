@@ -171,10 +171,41 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
       flag = true;
       collisionTargets.push_back(targetName);
     }
-    std::cout << "Collision(" << pairs[i]->body[0]->name() << "/" << pairs[i]->body[1]->name() << ")" << std::endl;
+    // std::cout << "Collision(" << pairs[i]->body[0]->name() << "/" << pairs[i]->body[1]->name() << ")" << std::endl;
   }
   out = flag;
   return retval;
+}
+
+Return_t CommonPlannerFrameworkPlugin::getModelInfo(const std::string& name, CnoidModelInfo& modelInfo) {
+  Return_t retval;
+  
+  cnoid::BodyItemPtr targetBodyItem;
+  
+  cnoid::ItemList<cnoid::BodyItem> bodyItems = cnoid::ItemTreeView::instance()->checkedItems<cnoid::BodyItem>();
+  for(size_t i = 0;i < bodyItems.size(); ++i) {
+    cnoid::BodyPtr body = bodyItems[i]->body();
+    if (body->name() == name) {
+      targetBodyItem = bodyItems[i];
+    }
+  }
+
+  if (!targetBodyItem) {
+    retval.returnValue = RETVAL_MODEL_NOT_FOUND;
+    retval.message = "Model is not found.";
+    return retval;
+  }
+
+  cnoid::BodyPtr body = targetBodyItem->body();
+  for(size_t i = 0;i < body->numAllJoints();++i) {
+    cnoid::LinkPtr link = body->joint(i);
+    CnoidJointInfo jointInfo;
+    jointInfo.name = link->name();
+    jointInfo.jointAngle = link->q();
+    jointInfo.maxAngle = link->q_upper();
+    jointInfo.minAngle = link->q_lower();
+    modelInfo.joints.push_back(jointInfo);
+  }
 }
 
 //////

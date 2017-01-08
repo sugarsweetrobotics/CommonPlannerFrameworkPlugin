@@ -33,7 +33,14 @@ public:
   CnoidJointInfo(const CnoidJointInfo& info) {copyFrom(info);}
   void operator=(const CnoidJointInfo& info) {copyFrom(info);}
 private:
-  void copyFrom(const CnoidJointInfo& info) {}
+  void copyFrom(const CnoidJointInfo& info) {
+    jointAngle = info.jointAngle;
+    jointDistance = info.jointDistance;
+    linkLength = info.linkLength;
+    linkTwist = info.linkTwist;
+    maxAngle = info.maxAngle;
+    minAngle = info.minAngle;
+  }
 
 public:
   std::string name;
