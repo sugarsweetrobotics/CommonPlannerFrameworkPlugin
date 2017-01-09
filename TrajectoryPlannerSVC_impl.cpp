@@ -89,16 +89,19 @@ Manipulation_CollisionDetectionServiceSVC_impl::~Manipulation_CollisionDetection
  */
 ::CORBA::Boolean Manipulation_CollisionDetectionServiceSVC_impl::isCollide(const Manipulation::RobotIdentifier& manipInfo, const Manipulation::RobotJointInfo& jointSeq, Manipulation::CollisionInfo_out collision)
 {
+  std::cout << "isCollide called." << std::endl;
   std::string name = (const char*)manipInfo.name;
   std::vector<double> joints;
   for(size_t i = 0;i < jointSeq.jointInfoSeq.length();++i) {
-    joints[i] = jointSeq.jointInfoSeq[i].jointAngle;
+    joints.push_back(jointSeq.jointInfoSeq[i].jointAngle);
   }
   bool flag = false;
   std::vector<std::string> collisionObjectNames;
   
   Return_t retval = m_pRTC->getPlugin()->isCollide(name, joints, flag, collisionObjectNames);
 
+  std::cout << "isCollide okay" << std::endl;
+  
   Manipulation::CollisionInfo_var out(new Manipulation::CollisionInfo());
   if (collisionObjectNames.size() > 0) {
     out->name = CORBA::string_dup(collisionObjectNames[0].c_str());

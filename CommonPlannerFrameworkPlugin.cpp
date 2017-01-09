@@ -101,7 +101,6 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
   cnoid::BodyItemPtr targetBodyItem;
   cnoid::ItemList<cnoid::BodyItem> bodyItems = cnoid::ItemTreeView::instance()->checkedItems<cnoid::BodyItem>();
 
-  
   for(size_t i = 0;i < bodyItems.size(); ++i) {
     cnoid::BodyPtr body = bodyItems[i]->body();
     if (body->name() == name) {
@@ -113,6 +112,13 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
   if (!targetBodyItem) {
     retval.returnValue = RETVAL_MODEL_NOT_FOUND;
     retval.message = "Model is not found.";
+    out = false;
+    return retval;
+  }
+
+  if (targetBodyItem->body()->numJoints() != jointSeq.size()) {
+    retval.returnValue = RETVAL_INVALID_JOINT_NUM;
+    retval.message = "Invalid Number of Joints";
     out = false;
     return retval;
   }
@@ -134,19 +140,14 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
       .connect(boost::bind(&CommonPlannerFrameworkPlugin::onKinematicStateChanged, this, name));
   }
 
-  if (targetBodyItem->body()->numJoints() != jointSeq.size()) {
-    retval.returnValue = RETVAL_INVALID_JOINT_NUM;
-    retval.message = "Invalid Number of Joints";
-    out = false;
-    return retval;
-  }
+  
   cnoid::BodyPtr body = targetBodyItem->body();
   for(int j=0; j < body->numJoints(); ++j){
     body->joint(j)->q() = jointSeq[j];
   }
   namedCounter[name] = 0;
   targetBodyItem->notifyKinematicStateChange(true);
-
+  std::cout << "udpateCollisions()" << std::endl;
   while(true) {
     if (namedCounter[name] > 0) {
       break;
@@ -157,7 +158,7 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
   // world->notifyUpdate();
   //world->collisionDetector()->detectCollisions(boost::bind(&CommonPlannerFrameworkPlugin::collisionCallback, this, _1));
   // world->updateCollisions();
-  std::cout << "udpateCollisions()" << std::endl;
+
   std::vector<cnoid::CollisionLinkPairPtr> pairs = world->collisions();
   for(size_t i = 0;i < pairs.size(); ++i) {
     std::string targetName;
