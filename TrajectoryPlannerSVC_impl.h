@@ -11,12 +11,11 @@
 
 #include "TrajectoryPlannerSkel.h"
 
-#ifndef TRAJECTRYPLANNERSVC_IMPL_H
-#define TRAJECTRYPLANNERSVC_IMPL_H
-
-
 class PlannerRTC_Cnoid;
 
+#ifndef TRAJECTORYPLANNERSVC_IMPL_H
+#define TRAJECTORYPLANNERSVC_IMPL_H
+ 
 /*!
  * @class ObjectDetectionServiceSVC_impl
  * Example class implementing IDL interface Manipulation::ObjectDetectionService
@@ -41,38 +40,64 @@ class Manipulation_ObjectDetectionServiceSVC_impl
    virtual ~Manipulation_ObjectDetectionServiceSVC_impl();
 
    // attributes and operations
-   void detectObject(const Manipulation::ObjectIdentifier& objectID, Manipulation::ObjectInfo_out objInfo);
-   void setGeometry(RTC::Geometry3D geometry);
+   Manipulation::ReturnValue* detectObject(const Manipulation::ObjectIdentifier& objectID, Manipulation::ObjectInfo_out objInfo);
+   Manipulation::ReturnValue* setBaseFrame(const Manipulation::HGMatrix& frame);
 
 };
 
-
 /*!
- * @class CurrentStateServiceSVC_impl
- * Example class implementing IDL interface Manipulation::CurrentStateService
+ * @class ObjectHandleStrategyServiceSVC_impl
+ * Example class implementing IDL interface Manipulation::ObjectHandleStrategyService
  */
-class Manipulation_CurrentStateServiceSVC_impl
- : public virtual POA_Manipulation::CurrentStateService,
+class Manipulation_ObjectHandleStrategyServiceSVC_impl
+ : public virtual POA_Manipulation::ObjectHandleStrategyService,
    public virtual PortableServer::RefCountServantBase
 {
  private:
    // Make sure all instances are built on the heap by making the
    // destructor non-public
-   //virtual ~CurrentStateServiceSVC_impl();
-
+   //virtual ~ObjectHandleStrategyServiceSVC_impl();
 
  public:
   /*!
    * @brief standard constructor
    */
-  Manipulation_CurrentStateServiceSVC_impl();
+  Manipulation_ObjectHandleStrategyServiceSVC_impl();
   /*!
    * @brief destructor
    */
-   virtual ~Manipulation_CurrentStateServiceSVC_impl();
+   virtual ~Manipulation_ObjectHandleStrategyServiceSVC_impl();
 
    // attributes and operations
-   void getCurrentState(Manipulation::RobotJointInfo_out robotJoint);
+   Manipulation::ReturnValue* getApproachOrientation(const Manipulation::ObjectInfo& objInfo, Manipulation::EndEffectorPose& eePos);
+
+};
+
+/*!
+ * @class KinematicSolverServiceSVC_impl
+ * Example class implementing IDL interface Manipulation::KinematicSolverService
+ */
+class Manipulation_KinematicSolverServiceSVC_impl
+ : public virtual POA_Manipulation::KinematicSolverService,
+   public virtual PortableServer::RefCountServantBase
+{
+ private:
+   // Make sure all instances are built on the heap by making the
+   // destructor non-public
+   //virtual ~KinematicSolverServiceSVC_impl();
+
+ public:
+  /*!
+   * @brief standard constructor
+   */
+  Manipulation_KinematicSolverServiceSVC_impl();
+  /*!
+   * @brief destructor
+   */
+   virtual ~Manipulation_KinematicSolverServiceSVC_impl();
+
+   // attributes and operations
+   Manipulation::ReturnValue* solveKinematics(const Manipulation::EndEffectorPose& targetPose, Manipulation::JointAngleSeq_out targetJointAngles);
 
 };
 
@@ -88,11 +113,11 @@ class Manipulation_CollisionDetectionServiceSVC_impl
    // Make sure all instances are built on the heap by making the
    // destructor non-public
    //virtual ~CollisionDetectionServiceSVC_impl();
-
+private:
   PlannerRTC_Cnoid* m_pRTC;
-
 public:
   void setRTC(PlannerRTC_Cnoid* pRTC) { m_pRTC = pRTC; }
+
  public:
   /*!
    * @brief standard constructor
@@ -104,7 +129,7 @@ public:
    virtual ~Manipulation_CollisionDetectionServiceSVC_impl();
 
    // attributes and operations
-   ::CORBA::Boolean isCollide(const Manipulation::RobotIdentifier& manipInfo, const Manipulation::RobotJointInfo& jointSeq, Manipulation::CollisionInfo_out collision);
+   Manipulation::ReturnValue* isCollide(const Manipulation::RobotIdentifier& robotID, const Manipulation::JointAngleSeq& jointAngles, Manipulation::CollisionPairSeq_out collisions);
 
 };
 
@@ -132,7 +157,7 @@ class Manipulation_ManipulationPlannerServiceSVC_impl
    virtual ~Manipulation_ManipulationPlannerServiceSVC_impl();
 
    // attributes and operations
-   void planManipulation(const Manipulation::RobotIdentifier& robotID, const Manipulation::RobotJointInfo& startRobotJointInfo, const Manipulation::RobotJointInfo& goalRobotJointInfo, Manipulation::ManipulationPlan_out manipPlan);
+   Manipulation::ReturnValue* planManipulation(const Manipulation::RobotJointInfo& jointsInfo, const Manipulation::JointAngleSeq& startJointAngles, const Manipulation::JointAngleSeq& goalJointAngles, Manipulation::ManipulationPlan_out manipPlan);
 
 };
 
@@ -148,8 +173,9 @@ class Manipulation_ModelServerServiceSVC_impl
    // Make sure all instances are built on the heap by making the
    // destructor non-public
    //virtual ~ModelServerServiceSVC_impl();
-  PlannerRTC_Cnoid* m_pRTC;
 
+private:
+  PlannerRTC_Cnoid* m_pRTC;
 public:
   void setRTC(PlannerRTC_Cnoid* pRTC) { m_pRTC = pRTC; }
 
@@ -164,8 +190,8 @@ public:
    virtual ~Manipulation_ModelServerServiceSVC_impl();
 
    // attributes and operations
-   void getModelInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::RobotJointInfo_out robotInfo);
-   void getMeshInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::MeshInfo_out mesh);
+   Manipulation::ReturnValue* getModelInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::RobotJointInfo_out jointsInfo);
+   Manipulation::ReturnValue* getMeshInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::MeshInfo_out mesh);
 
 };
 
@@ -193,13 +219,13 @@ class Manipulation_MotionGeneratorServiceSVC_impl
    virtual ~Manipulation_MotionGeneratorServiceSVC_impl();
 
    // attributes and operations
-   void followManipPlan(const Manipulation::ManipulationPlan& manipPlan);
-   void getCurrentRobotJointInfo(const Manipulation::RobotIdentifier& robotID, Manipulation::RobotJointInfo_out robotJoint);
+   Manipulation::ReturnValue* followManipPlan(const Manipulation::ManipulationPlan& manipPlan);
+   Manipulation::ReturnValue* getCurrentRobotJointAngles(Manipulation::JointAngleSeq_out jointAngles);
 
 };
 
 
 
-#endif // TRAJECTRYPLANNERSVC_IMPL_H
+#endif // TRAJECTORYPLANNERSVC_IMPL_H
 
 

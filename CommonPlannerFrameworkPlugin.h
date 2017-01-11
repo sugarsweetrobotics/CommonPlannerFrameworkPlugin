@@ -9,6 +9,7 @@
 
 #include <cnoid/CollisionDetector>
 
+#include <map>
 /// Reference class 
 class PlannerRTC_Cnoid;
 
