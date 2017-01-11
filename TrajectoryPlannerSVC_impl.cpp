@@ -78,7 +78,7 @@ Manipulation::ReturnValue* Manipulation_ObjectHandleStrategyServiceSVC_impl::get
 
 /*
  * Example implementational code for IDL interface Manipulation::KinematicSolverService
- */
+
 Manipulation_KinematicSolverServiceSVC_impl::Manipulation_KinematicSolverServiceSVC_impl()
 {
   // Please add extra constructor code here.
@@ -91,16 +91,16 @@ Manipulation_KinematicSolverServiceSVC_impl::~Manipulation_KinematicSolverServic
 }
 
 
-/*
+
  * Methods corresponding to IDL attributes and operations
- */
+
 Manipulation::ReturnValue* Manipulation_KinematicSolverServiceSVC_impl::solveKinematics(const Manipulation::EndEffectorPose& targetPose, const Manipulation::JointAngleSeq& startJointAngles,  Manipulation::JointAngleSeq_out targetJointAngles)
 {
   Manipulation::ReturnValue* result;
   // Please insert your code here and remove the following warning pragma
   return result;
 }
-
+*/
 
 
 // End of example implementational code
