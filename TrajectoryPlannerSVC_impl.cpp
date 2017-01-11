@@ -36,7 +36,7 @@ Manipulation::ReturnValue* Manipulation_ObjectDetectionServiceSVC_impl::detectOb
   return result;
 }
 
-Manipulation::ReturnValue* Manipulation_ObjectDetectionServiceSVC_impl::setBaseFrame(const Manipulation::HGMatrix& frame)
+Manipulation::ReturnValue* Manipulation_ObjectDetectionServiceSVC_impl::setBaseFrame(const Manipulation::Matrix34& frame)
 {
 	Manipulation::ReturnValue* result;
   // Please insert your code here and remove the following warning pragma
@@ -94,9 +94,9 @@ Manipulation_KinematicSolverServiceSVC_impl::~Manipulation_KinematicSolverServic
 /*
  * Methods corresponding to IDL attributes and operations
  */
-Manipulation::ReturnValue* Manipulation_KinematicSolverServiceSVC_impl::solveKinematics(const Manipulation::EndEffectorPose& targetPose, Manipulation::JointAngleSeq_out targetJointAngles)
+Manipulation::ReturnValue* Manipulation_KinematicSolverServiceSVC_impl::solveKinematics(const Manipulation::EndEffectorPose& targetPose, const Manipulation::JointAngleSeq& startJointAngles,  Manipulation::JointAngleSeq_out targetJointAngles)
 {
-	Manipulation::ReturnValue* result;
+  Manipulation::ReturnValue* result;
   // Please insert your code here and remove the following warning pragma
   return result;
 }
@@ -225,10 +225,31 @@ Manipulation_ModelServerServiceSVC_impl::~Manipulation_ModelServerServiceSVC_imp
 
 static void operator<<=(Manipulation::JointParameter& jointInfo, const CnoidJointInfo& info) {
   jointInfo.name = CORBA::string_dup(info.name.c_str());
-  jointInfo.dHParam.a = info.linkLength;
-  jointInfo.dHParam.alpha = info.linkTwist;
-  jointInfo.dHParam.d = info.jointDistance;
-  jointInfo.dHParam.theta = info.jointAngle;
+  switch(info.jointType) {
+  JOINT_ROTATE:
+    jointInfo.jointType = Manipulation::JOINT_ROTATE;
+    break;
+  JOINT_SLIDE:
+    jointInfo.jointType = Manipulation::JOINT_SLIDE;
+    break;
+  JOINT_FIXED:
+    jointInfo.jointType = Manipulation::JOINT_FIXED;
+    break;
+  JOINT_FREE:
+    jointInfo.jointType = Manipulation::JOINT_FREE;
+    break;
+  default:
+    std::cout << "Invalid JointType (" << info.jointType << ")" << std::endl;
+    jointInfo.jointType = Manipulation::JOINT_UNKNOWN;
+  }
+
+  for(int i = 0;i < 3;i++) {
+    jointInfo.axis[i] = info.axis[i];
+    for(int j = 0;j < 3;j++) {
+      jointInfo.offset[i][j] = info.rotation[i][j];
+    }
+    jointInfo.offset[i][3] = info.translation[i];
+  }
   jointInfo.limit.upper = info.maxAngle;
   jointInfo.limit.lower = info.minAngle;
 };

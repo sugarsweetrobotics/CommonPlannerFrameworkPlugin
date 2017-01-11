@@ -41,7 +41,7 @@ class Manipulation_ObjectDetectionServiceSVC_impl
 
    // attributes and operations
    Manipulation::ReturnValue* detectObject(const Manipulation::ObjectIdentifier& objectID, Manipulation::ObjectInfo_out objInfo);
-   Manipulation::ReturnValue* setBaseFrame(const Manipulation::HGMatrix& frame);
+   Manipulation::ReturnValue* setBaseFrame(const Manipulation::Matrix34& frame);
 
 };
 
@@ -97,7 +97,7 @@ class Manipulation_KinematicSolverServiceSVC_impl
    virtual ~Manipulation_KinematicSolverServiceSVC_impl();
 
    // attributes and operations
-   Manipulation::ReturnValue* solveKinematics(const Manipulation::EndEffectorPose& targetPose, Manipulation::JointAngleSeq_out targetJointAngles);
+  Manipulation::ReturnValue* solveKinematics(const Manipulation::EndEffectorPose& targetPose, const Manipulation::JointAngleSeq& startJointAngles, Manipulation::JointAngleSeq_out targetJointAngles);
 
 };
 

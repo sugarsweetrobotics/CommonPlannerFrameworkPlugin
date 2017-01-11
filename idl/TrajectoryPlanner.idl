@@ -13,6 +13,10 @@
 
 module Manipulation {
 
+  typedef double Vector3[3];
+  
+  typedef double Matrix34[3][4];
+  
   struct ObjectIdentifier {
     string name;
   };
@@ -28,21 +32,24 @@ module Manipulation {
 
   typedef sequence<JointAngle> JointAngleSeq;
 
-  struct DHParameter {
-    double alpha;
-    double theta;
-    double a;
-    double d;
-  };
-
   struct LimitValue {
     double upper;
     double lower;
   };
+
+  enum JOINT_TYPE {
+    JOINT_ROTATE,
+    JOINT_SLIDE,
+    JOINT_FIXED,
+    JOINT_FREE,
+    JOINT_UNKNOWN
+  };
   
   struct JointParameter {
     string name;
-    DHParameter dHParam;
+    JOINT_TYPE jointType;
+    Vector3 axis;
+    Matrix34 offset;
     LimitValue limit;
   };
 
@@ -87,13 +94,10 @@ module Manipulation {
     RTC::Pose3D pose;
   };
   
-  struct HGMatrix {
-     double value[3][4];
-  };
   
   interface ObjectDetectionService {
     ReturnValue detectObject(in ObjectIdentifier objectID, out ObjectInfo objInfo);
-    ReturnValue setBaseFrame(in HGMatrix frame);
+    ReturnValue setBaseFrame(in Matrix34 frame);
   };
 
   interface ObjectHandleStrategyService {
@@ -101,7 +105,7 @@ module Manipulation {
   };
 
   interface KinematicSolverService {
-    ReturnValue solveKinematics(in EndEffectorPose targetPose, out JointAngleSeq targetJointAngles);
+    ReturnValue solveKinematics(in EndEffectorPose targetPose, in JointAngleSeq startJointAngles, out JointAngleSeq targetJointAngles);
   };
   
   /** This might be unused.

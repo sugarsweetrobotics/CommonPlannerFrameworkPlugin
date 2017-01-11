@@ -28,6 +28,13 @@ Return_t(RETVAL returnValue_, const std::string& message_): returnValue(returnVa
   std::string message;
 };
 
+enum JOINT_TYPE {
+  JOINT_ROTATE,
+  JOINT_SLIDE,
+  JOINT_FREE,
+  JOINT_FIXED,
+};
+
 struct CnoidJointInfo {
 public:
   CnoidJointInfo() {}
@@ -35,20 +42,23 @@ public:
   void operator=(const CnoidJointInfo& info) {copyFrom(info);}
 private:
   void copyFrom(const CnoidJointInfo& info) {
-    jointAngle = info.jointAngle;
-    jointDistance = info.jointDistance;
-    linkLength = info.linkLength;
-    linkTwist = info.linkTwist;
-    maxAngle = info.maxAngle;
-    minAngle = info.minAngle;
+    this->name = info.name;
+    this->jointType = info.jointType;
+    memcpy(this->translation, info.translation, 3 * sizeof(double));
+    memcpy(this->axis, info.axis, 3 * sizeof(double));
+    for(int i = 0;i < 3;i++) {
+      memcpy(this->rotation[i], info.rotation[i], 3 * sizeof(double));
+    }
+    this->maxAngle = info.maxAngle;
+    this->minAngle = info.minAngle;
   }
 
 public:
   std::string name;
-  double jointAngle;
-  double jointDistance;
-  double linkLength;
-  double linkTwist;
+  JOINT_TYPE jointType;
+  double axis[3];
+  double translation[3];
+  double rotation[3][3];
   double maxAngle;
   double minAngle;
 };
@@ -88,8 +98,6 @@ public:
   std::map<std::string, int32_t> namedCounter;
   void onKinematicStateChanged(const std::string& name);
 
-  void collisionCallback(const cnoid::CollisionPair& pair);
-  
   Return_t isCollide(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);
 
   Return_t getModelInfo(const std::string& name, CnoidModelInfo& modelInfo);

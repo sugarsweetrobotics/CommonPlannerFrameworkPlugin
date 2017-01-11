@@ -27,8 +27,6 @@ CommonPlannerFrameworkPlugin::CommonPlannerFrameworkPlugin() : cnoid::Plugin("Co
  */
 bool CommonPlannerFrameworkPlugin::initialize() {
   cnoid::ToolBar* bar = new cnoid::ToolBar("CommonPlanner");
-  bar->addButton("Increment")->sigClicked().connect(boost::bind(&CommonPlannerFrameworkPlugin::onButtonClicked, this, +0.04));
-  bar->addButton("Decrement")->sigClicked().connect(boost::bind(&CommonPlannerFrameworkPlugin::onButtonClicked, this, -0.04));
   bar->addButton("Test")->sigClicked().connect(boost::bind(&CommonPlannerFrameworkPlugin::onTest, this));
   addToolBar(bar);
 
@@ -39,54 +37,14 @@ bool CommonPlannerFrameworkPlugin::initialize() {
   plannerRTC = dynamic_cast<PlannerRTC_Cnoid*>(rtc);
   plannerRTC->setPlugin(this);
 
-  /**
-  int index = cnoid::CollisionDetector::factoryIndex("AISTCollisionDetector");
-  std::cout << "Index = " << index << " / ";
-  cnoid::ItemList<cnoid::WorldItem> worldItems = cnoid::ItemTreeView::mainInstance()->selectedItems<cnoid::WorldItem>();
-  std::cout << "size = " << worldItems.size() << " / ";
-  //  pDetector = cnoid::CollisionDetector::create(index);
-  std::cout << "name = " << pDetector->name() << std::endl;
-  */
   return true;
 }
 
 
 void CommonPlannerFrameworkPlugin::onTest() {
-  std::cout << "Test" << std::endl;
-  std::vector<double> joints;
-  joints.push_back(0);
-  joints.push_back(1);
-  joints.push_back(0);
-  joints.push_back(0);
-  joints.push_back(0);
-  joints.push_back(0);
-  joints.push_back(0);
-  std::vector<std::string> names;
-  bool flag;
-  Return_t retval = this->isCollide("orochi", joints, flag, names);
-  std::cout << "flag: " << flag << std::endl;
-  std::cout << "retval : " << retval.message << std::endl;
-  for(size_t i = 0;i < names.size();++i) {
-    std::cout << "Collide with " << names[i] << std::endl;
-  }
-  //std::cout << "isCollide() = " << this->isCollide("orochi") << std::endl;
+  CnoidModelInfo info;
+  this->getModelInfo("orochi", info);
 }
-
-/**
- */
-void CommonPlannerFrameworkPlugin::onButtonClicked(double dq) {
-  cnoid::ItemList<cnoid::BodyItem> bodyItems = cnoid::ItemTreeView::mainInstance()->selectedItems<cnoid::BodyItem>();
-  
-  for(size_t i=0; i < bodyItems.size(); ++i){
-    cnoid::BodyPtr body = bodyItems[i]->body();
-    for(int j=0; j < body->numJoints(); ++j){
-      body->joint(j)->q() += dq;
-    }
-    bodyItems[i]->notifyKinematicStateChange(true);
-  }
-}
-
-void CommonPlannerFrameworkPlugin::collisionCallback(const cnoid::CollisionPair& pair) {}
 
 
 void CommonPlannerFrameworkPlugin::onKinematicStateChanged(const std::string& name) {
@@ -200,11 +158,40 @@ Return_t CommonPlannerFrameworkPlugin::getModelInfo(const std::string& name, Cno
   cnoid::BodyPtr body = targetBodyItem->body();
   for(size_t i = 0;i < body->numAllJoints();++i) {
     cnoid::LinkPtr link = body->joint(i);
+    //std::cout << "-J(" << i << ") = " << link->name() << std::endl;
     CnoidJointInfo jointInfo;
     jointInfo.name = link->name();
-    jointInfo.jointAngle = link->q();
+    
+    if (link->isRotationalJoint()) {
+      jointInfo.jointType = JOINT_ROTATE;
+    } else if (link->isSlideJoint()) {
+      jointInfo.jointType = JOINT_SLIDE;
+    } else if (link->isFixedJoint()) {
+      jointInfo.jointType = JOINT_FIXED;
+    } else if (link->isFreeJoint()) {
+      jointInfo.jointType = JOINT_FREE;
+    } else {
+      std::cout << "Invalid Joint Type (" << link->name() << ")" << std::endl;
+      retval.returnValue = RETVAL_INVALID_PRECONDITION;
+      retval.message = "Invalid Joint Type";
+      return retval;
+    }
+    
+    for(int i = 0;i < 3;i++) {
+      jointInfo.axis[i] = link->a()[i];
+      jointInfo.translation[i] = link->b()[i];
+    }
+
+    for(int i = 0;i < 3;i++) {
+      for(int j = 0;j < 3;j++) {
+	jointInfo.rotation[i][j] = link->Rb()(i, j);
+      }
+    }
+
+
     jointInfo.maxAngle = link->q_upper();
     jointInfo.minAngle = link->q_lower();
+    
     modelInfo.joints.push_back(jointInfo);
   }
 }
