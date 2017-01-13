@@ -3,11 +3,12 @@
  */
 
 #include <cnoid/ItemTreeView>
+#include <cnoid/LazyCaller>
 #include <cnoid/BodyItem>
 #include <cnoid/WorldItem>
 #include <cnoid/ToolBar>
 #include <cnoid/OpenRTMUtil>
-
+#include <cnoid/MessageView>
 #include <boost/bind.hpp>
 
 #include "CommonPlannerFrameworkPlugin.h"
@@ -42,14 +43,36 @@ bool CommonPlannerFrameworkPlugin::initialize() {
 
 
 void CommonPlannerFrameworkPlugin::onTest() {
+
+  /*
   CnoidModelInfo info;
   this->getModelInfo("orochi", info);
+  */
+
+  std::vector<double> jointSeq(7, 0);
+  jointSeq[1] = 1.0;
+  bool flag;
+  std::vector<std::string> collisionTargets;
+  Return_t retval = this->isCollide("orochi", jointSeq, flag, collisionTargets);
+  std::cout << "Return: " << retval.message << std::endl;
+  if (flag) {
+    
+    std::cout << "Collide with " << collisionTargets[0] << std::endl;
+  } else {
+    std::cout << "No collision." << std::endl;
+  }
+    
 }
 
 
 void CommonPlannerFrameworkPlugin::onKinematicStateChanged(const std::string& name) {
   std::cout << "onKinematcStateChanged: " << name << std::endl;
   namedCounter[name] = namedCounter[name] + 1;
+}
+
+Return_t CommonPlannerFrameworkPlugin::isCollideSynchronously(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets) {
+  //  cnoid::callSynchronously(boost::bind(&CommonPlannerFrameworkPlugin::isCollide, this, name, jointSeq, out, collisionTargets));
+  return this->isCollide(name, jointSeq, out, collisionTargets);
 }
 
 Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets) {
@@ -80,7 +103,6 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
     out = false;
     return retval;
   }
-
   
   cnoid::WorldItemPtr world = targetBodyItem->findOwnerItem<cnoid::WorldItem>();
   if (!world) {
@@ -89,6 +111,7 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
     out = false;
     return retval;
   }
+
 
   std::map<std::string, int32_t>::iterator itr = namedCounter.find(name);
   if (itr == namedCounter.end()) {
@@ -106,16 +129,16 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
   namedCounter[name] = 0;
   targetBodyItem->notifyKinematicStateChange(true);
   std::cout << "udpateCollisions()" << std::endl;
+
+  cnoid::MessageView::instance()->flush();
+  /*
   while(true) {
     if (namedCounter[name] > 0) {
       break;
     }
     ; // do nothing
   }
-  
-  // world->notifyUpdate();
-  //world->collisionDetector()->detectCollisions(boost::bind(&CommonPlannerFrameworkPlugin::collisionCallback, this, _1));
-  // world->updateCollisions();
+  */
 
   std::vector<cnoid::CollisionLinkPairPtr> pairs = world->collisions();
   for(size_t i = 0;i < pairs.size(); ++i) {
@@ -134,6 +157,11 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
   }
   out = flag;
   return retval;
+}
+
+Return_t CommonPlannerFrameworkPlugin::getModelInfoSynchronously(const std::string& name, CnoidModelInfo& modelInfo) {
+  //cnoid::callSynchronously(boost::bind(&CommonPlannerFrameworkPlugin::getModelInfo, this, name, modelInfo));
+  return this->getModelInfo(name, modelInfo);
 }
 
 Return_t CommonPlannerFrameworkPlugin::getModelInfo(const std::string& name, CnoidModelInfo& modelInfo) {

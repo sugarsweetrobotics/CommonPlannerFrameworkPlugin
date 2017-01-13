@@ -99,8 +99,11 @@ public:
   void onKinematicStateChanged(const std::string& name);
 
   Return_t isCollide(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);
+  Return_t isCollideSynchronously(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);  
+  
 
   Return_t getModelInfo(const std::string& name, CnoidModelInfo& modelInfo);
+  Return_t getModelInfoSynchronously(const std::string& name, CnoidModelInfo& modelInfo);
 };
 
 

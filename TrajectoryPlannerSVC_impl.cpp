@@ -14,7 +14,7 @@
 
 /*
  * Example implementational code for IDL interface Manipulation::ObjectDetectionService
- */
+
 Manipulation_ObjectDetectionServiceSVC_impl::Manipulation_ObjectDetectionServiceSVC_impl()
 {
   // Please add extra constructor code here.
@@ -25,11 +25,11 @@ Manipulation_ObjectDetectionServiceSVC_impl::~Manipulation_ObjectDetectionServic
 {
   // Please add extra destructor code here.
 }
-
+*/
 
 /*
  * Methods corresponding to IDL attributes and operations
- */
+
 Manipulation::ReturnValue* Manipulation_ObjectDetectionServiceSVC_impl::detectObject(const Manipulation::ObjectIdentifier& objectID, Manipulation::ObjectInfo_out objInfo)
 {
 	Manipulation::ReturnValue* result;
@@ -42,14 +42,14 @@ Manipulation::ReturnValue* Manipulation_ObjectDetectionServiceSVC_impl::setBaseF
   // Please insert your code here and remove the following warning pragma
   return result;
 }
-
+*/
 
 
 // End of example implementational code
 
 /*
  * Example implementational code for IDL interface Manipulation::ObjectHandleStrategyService
- */
+
 Manipulation_ObjectHandleStrategyServiceSVC_impl::Manipulation_ObjectHandleStrategyServiceSVC_impl()
 {
   // Please add extra constructor code here.
@@ -60,18 +60,18 @@ Manipulation_ObjectHandleStrategyServiceSVC_impl::~Manipulation_ObjectHandleStra
 {
   // Please add extra destructor code here.
 }
-
+*/
 
 /*
  * Methods corresponding to IDL attributes and operations
- */
+
 Manipulation::ReturnValue* Manipulation_ObjectHandleStrategyServiceSVC_impl::getApproachOrientation(const Manipulation::ObjectInfo& objInfo, Manipulation::EndEffectorPose& eePos)
 {
 	Manipulation::ReturnValue* result;
   // Please insert your code here and remove the following warning pragma
   return result;
 }
-
+*/
 
 
 // End of example implementational code
@@ -141,7 +141,7 @@ Manipulation::ReturnValue* Manipulation_CollisionDetectionServiceSVC_impl::isCol
 
   bool flag = false;
   std::vector<std::string> collisionObjectNames;
-  Return_t retval = m_pRTC->getPlugin()->isCollide(name, joints, flag, collisionObjectNames);
+  Return_t retval = m_pRTC->getPlugin()->isCollideSynchronously(name, joints, flag, collisionObjectNames);
 
   Manipulation::CollisionPairSeq_var out(new Manipulation::CollisionPairSeq());
   if (retval.returnValue == RETVAL_OK) {
@@ -178,7 +178,7 @@ Manipulation::ReturnValue* Manipulation_CollisionDetectionServiceSVC_impl::isCol
 
 /*
  * Example implementational code for IDL interface Manipulation::ManipulationPlannerService
- */
+
 Manipulation_ManipulationPlannerServiceSVC_impl::Manipulation_ManipulationPlannerServiceSVC_impl()
 {
   // Please add extra constructor code here.
@@ -189,21 +189,21 @@ Manipulation_ManipulationPlannerServiceSVC_impl::~Manipulation_ManipulationPlann
 {
   // Please add extra destructor code here.
 }
-
+*/
 
 /*
  * Methods corresponding to IDL attributes and operations
- */
+
 Manipulation::ReturnValue* Manipulation_ManipulationPlannerServiceSVC_impl::planManipulation(const Manipulation::RobotJointInfo& jointsInfo, const Manipulation::JointAngleSeq& startJointAngles, const Manipulation::JointAngleSeq& goalJointAngles, Manipulation::ManipulationPlan_out manipPlan)
 {
 	Manipulation::ReturnValue* result;
   // Please insert your code here and remove the following warning pragma
 #ifndef WIN32
-  #warning "Code missing in function <Manipulation::ReturnValue* Manipulation_ManipulationPlannerServiceSVC_impl::planManipulation(const Manipulation::RobotJointInfo& jointsInfo, const Manipulation::JointAngleSeq& startJointAngles, const Manipulation::JointAngleSeq& goalJointAngles, Manipulation::ManipulationPlan_out manipPlan)>"
+
 #endif
   return result;
 }
-
+*/
 
 
 // End of example implementational code
@@ -262,7 +262,7 @@ Manipulation::ReturnValue* Manipulation_ModelServerServiceSVC_impl::getModelInfo
   Manipulation::ReturnValue_var result(new Manipulation::ReturnValue());
   std::string name = (const char*)robotID.name;
   CnoidModelInfo modelInfo;
-  Return_t retval = m_pRTC->getPlugin()->getModelInfo(name, modelInfo);
+  Return_t retval = m_pRTC->getPlugin()->getModelInfoSynchronously(name, modelInfo);
 
   Manipulation::RobotJointInfo_var var(new Manipulation::RobotJointInfo());
   int n = modelInfo.joints.size();
@@ -291,7 +291,7 @@ Manipulation::ReturnValue* Manipulation_ModelServerServiceSVC_impl::getMeshInfo(
 
 /*
  * Example implementational code for IDL interface Manipulation::MotionGeneratorService
- */
+
 Manipulation_MotionGeneratorServiceSVC_impl::Manipulation_MotionGeneratorServiceSVC_impl()
 {
   // Please add extra constructor code here.
@@ -302,17 +302,16 @@ Manipulation_MotionGeneratorServiceSVC_impl::~Manipulation_MotionGeneratorServic
 {
   // Please add extra destructor code here.
 }
-
+*/
 
 /*
  * Methods corresponding to IDL attributes and operations
- */
+
 Manipulation::ReturnValue* Manipulation_MotionGeneratorServiceSVC_impl::followManipPlan(const Manipulation::ManipulationPlan& manipPlan)
 {
 	Manipulation::ReturnValue* result;
   // Please insert your code here and remove the following warning pragma
 #ifndef WIN32
-  #warning "Code missing in function <Manipulation::ReturnValue* Manipulation_MotionGeneratorServiceSVC_impl::followManipPlan(const Manipulation::ManipulationPlan& manipPlan)>"
 #endif
   return result;
 }
@@ -322,11 +321,10 @@ Manipulation::ReturnValue* Manipulation_MotionGeneratorServiceSVC_impl::getCurre
 	Manipulation::ReturnValue* result;
   // Please insert your code here and remove the following warning pragma
 #ifndef WIN32
-  #warning "Code missing in function <Manipulation::ReturnValue* Manipulation_MotionGeneratorServiceSVC_impl::getCurrentRobotJointAngles(Manipulation::JointAngleSeq_out jointAngles)>"
 #endif
   return result;
 }
-
+*/
 
 
 // End of example implementational code
