@@ -67,6 +67,13 @@ public:
 struct CnoidModelInfo {
 public:
   std::vector<CnoidJointInfo> joints;
+
+
+public:
+  void operator=(const CnoidModelInfo& mi) {
+    this->joints.clear();
+    this->joints.insert(this->joints.end(), mi.joints.begin(), mi.joints.end());
+  }
 };
 
 
@@ -109,7 +116,13 @@ public:
   Return_t isCollide(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);
   Return_t isCollideSynchronously(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);
   
-
+  std::string __modelName;
+  CnoidModelInfo __modelInfo;
+  Return_t __modelRetval;
+  void __getModelInfo() {
+    __modelRetval = getModelInfo(__modelName, __modelInfo);
+  }
+  
   Return_t getModelInfo(const std::string& name, CnoidModelInfo& modelInfo);
   Return_t getModelInfoSynchronously(const std::string& name, CnoidModelInfo& modelInfo);
 };

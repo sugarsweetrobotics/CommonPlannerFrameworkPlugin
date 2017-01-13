@@ -74,7 +74,9 @@ Return_t CommonPlannerFrameworkPlugin::isCollideSynchronously(const std::string&
   __jointSeq = jointSeq;
   __collisionTargets.clear();
   cnoid::callSynchronously(boost::bind(&CommonPlannerFrameworkPlugin::__isCollide, this));
-  return this->isCollide(name, jointSeq, out, collisionTargets);
+  out = __out;
+  collisionTargets.insert(collisionTargets.end(), __collisionTargets.begin(), __collisionTargets.end());
+  return __retval;
 }
 
 Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets) {
@@ -162,8 +164,10 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
 }
 
 Return_t CommonPlannerFrameworkPlugin::getModelInfoSynchronously(const std::string& name, CnoidModelInfo& modelInfo) {
-  //cnoid::callSynchronously(boost::bind(&CommonPlannerFrameworkPlugin::getModelInfo, this, name, modelInfo));
-  return this->getModelInfo(name, modelInfo);
+  __modelName = name;
+  cnoid::callSynchronously(boost::bind(&CommonPlannerFrameworkPlugin::__getModelInfo, this));
+  modelInfo = __modelInfo;
+  return __modelRetval;
 }
 
 Return_t CommonPlannerFrameworkPlugin::getModelInfo(const std::string& name, CnoidModelInfo& modelInfo) {
