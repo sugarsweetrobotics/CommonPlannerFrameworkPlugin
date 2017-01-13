@@ -56,7 +56,6 @@ void CommonPlannerFrameworkPlugin::onTest() {
   Return_t retval = this->isCollide("orochi", jointSeq, flag, collisionTargets);
   std::cout << "Return: " << retval.message << std::endl;
   if (flag) {
-    
     std::cout << "Collide with " << collisionTargets[0] << std::endl;
   } else {
     std::cout << "No collision." << std::endl;
@@ -71,7 +70,10 @@ void CommonPlannerFrameworkPlugin::onKinematicStateChanged(const std::string& na
 }
 
 Return_t CommonPlannerFrameworkPlugin::isCollideSynchronously(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets) {
-  //  cnoid::callSynchronously(boost::bind(&CommonPlannerFrameworkPlugin::isCollide, this, name, jointSeq, out, collisionTargets));
+  __name = name;
+  __jointSeq = jointSeq;
+  __collisionTargets.clear();
+  cnoid::callSynchronously(boost::bind(&CommonPlannerFrameworkPlugin::__isCollide, this));
   return this->isCollide(name, jointSeq, out, collisionTargets);
 }
 
@@ -128,7 +130,7 @@ Return_t CommonPlannerFrameworkPlugin::isCollide(const std::string& name, const 
   }
   namedCounter[name] = 0;
   targetBodyItem->notifyKinematicStateChange(true);
-  std::cout << "udpateCollisions()" << std::endl;
+  // std::cout << "udpateCollisions()" << std::endl;
 
   cnoid::MessageView::instance()->flush();
   /*

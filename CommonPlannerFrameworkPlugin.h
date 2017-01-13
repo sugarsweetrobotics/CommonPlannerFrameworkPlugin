@@ -98,8 +98,16 @@ public:
   std::map<std::string, int32_t> namedCounter;
   void onKinematicStateChanged(const std::string& name);
 
+  std::string __name;
+  std::vector<double> __jointSeq;
+  bool __out;
+  std::vector<std::string> __collisionTargets;
+  Return_t __retval;
+  void __isCollide() {
+    __retval = isCollide(__name, __jointSeq, __out, __collisionTargets);
+  }
   Return_t isCollide(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);
-  Return_t isCollideSynchronously(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);  
+  Return_t isCollideSynchronously(const std::string& name, const std::vector<double>& jointSeq, bool& out, std::vector<std::string>& collisionTargets);
   
 
   Return_t getModelInfo(const std::string& name, CnoidModelInfo& modelInfo);
